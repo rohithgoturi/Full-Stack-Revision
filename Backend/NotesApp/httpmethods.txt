@@ -1,0 +1,8 @@
+http methods server se kya action perform karwana hai voh decide karte hai
+
+some common http methods are :
+1) get => server se data fetch karne ke liye use karte hai, joh url mein bhi dhikta hai
+2) post => server mein data bhejne ke liye use karte hain
+3) put => existing resource ko poorhi tarah update karne ke liye use hota hai
+4) patch => partially update karne ke liye i.e required fields ko hi update karne ke liye patch method ka use karte hai
+5) delete => server se kisi bhi resource ko remove karne ke liye delete method ka use karte hai
