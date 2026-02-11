@@ -10,7 +10,7 @@ app.get("/about", (req, res) => {
 })
 
 app.get("/profile", (req, res) => {
-    res.send("profile page")
+    res.send("this is a profile page")
 })
 
 app.listen(3000)
