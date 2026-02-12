@@ -3,6 +3,7 @@ const dontenv = require('dotenv').config();
 
 async function connectDB () {
     await mongoose.connect(process.env.MONGODB_CONNECTION_STRING);
+    console.log("connected to db");
 }
 
 module.exports = connectDB;
