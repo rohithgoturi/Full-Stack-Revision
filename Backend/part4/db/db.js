@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
+const dontenv = require('dotenv').config();
 
 async function connectDB () {
-    await mongoose.connect('mongodb+srv://backend:PMSFgA3KxUZwW7iE@backend-revision.nygw4z5.mongodb.net/myDB');
+    await mongoose.connect(process.env.MONGODB_CONNECTION_STRING);
 }
 
 module.exports = connectDB;
