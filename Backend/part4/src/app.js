@@ -1,6 +1,7 @@
 const express = require('express')
-const connectDB = require('./db/db');
 const app = express()
+const noteModel = require('./models/note.models.js');
+
 app.use(express.json())
 
 app.get("/", (req,res) => {
