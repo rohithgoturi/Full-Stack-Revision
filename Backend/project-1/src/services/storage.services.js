@@ -1,15 +1,16 @@
 const ImageKit =  require('@imagekit/nodejs');
+require('dotenv').config();
 
-const client = new ImageKit({
+
+const imagekit = new ImageKit({
   privateKey: process.env['IMAGEKIT_PRIVATE_KEY'],
 });
 
 async function uploadImage (buffer) {
-    const result = await imagekit.client.upload({
-        file : buffer,
-        filename : "image.jpg"
+    const result = await imagekit.files.upload({
+        file : buffer.toString('base64'),
+        fileName : "image.jpg"
     })
-
     return result;
 }
 
