@@ -3,6 +3,8 @@ const app = express();
 const postModel = require('./models/post.model')
 const uploadImage = require('./services/storage.services')
 const multer = require('multer');
+const cors = require('cors');
+app.use(cors());
 
 app.use(express.json());
 
@@ -24,7 +26,7 @@ app.post("/create-post",  upload.single("image"), async (req,res) => {
     })
 })
 
-app.get("/create-post", async (req,res) => {
+app.get("/view-posts", async (req,res) => {
     const posts = await postModel.find();
     res.status(200).json({
         message : "fetched posts successfully",
