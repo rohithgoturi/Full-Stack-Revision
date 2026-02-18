@@ -10,8 +10,8 @@ app.use(express.json());
 
 const upload = multer({storage : multer.memoryStorage()})
 
+// Create a post with image and caption
 app.post("/create-post",  upload.single("image"), async (req,res) => {
-
     const result = await uploadImage(req.file.buffer)
     const post = await postModel.create({
         image : result.url,
@@ -26,6 +26,7 @@ app.post("/create-post",  upload.single("image"), async (req,res) => {
     })
 })
 
+// Get all posts
 app.get("/view-posts", async (req,res) => {
     const posts = await postModel.find();
     res.status(200).json({
