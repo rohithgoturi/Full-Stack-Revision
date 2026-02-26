@@ -1,4 +1,11 @@
 const musicModel = require('../models/music.model');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const ImageKit = require('../services/storage.services');
+const { uploadMusic } = require('../services/storage.services');
+const result = await uploadFile(file.buffer('base64'));
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const createMusic = async (req, res) => {
     const {uri, title, artist} = req.body;
@@ -12,7 +19,7 @@ const createMusic = async (req, res) => {
     }
 
     try {
-        const decode = jwt.verify(token,JWT_SECRET);
+        const decoded = jwt.verify(token,JWT_SECRET);
         if(decoded.role !== artist){
             return res.status(401).json({
                 message: "unauthorized"
@@ -25,12 +32,25 @@ const createMusic = async (req, res) => {
         })
     }
 
-    
-    
+
+    const result = await uploadMusic(req.file.buffer);
+
     const music = await musicModel.create({
-        uri,
+        uri: result.uri,
         title,
-        artist
+        artist : decoded.id
     })
 
+    return res.status(201).json({
+        message : "music created successfully",
+        music : {
+            uri : music.uri,
+            title : music.title,
+            artist : music.artist
+        }
+    })
+
+
 }
+
+module.exports = {createMusic}
