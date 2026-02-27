@@ -1,56 +1,100 @@
-C R U D operations 
+NOTES APP using MONGODB
 
-const express = require('express')
+APP.JS
+const express = require('express');
 const app = express();
-app.use(express.json())
+const noteModel = require('./src/models/notes.models');
+app.use(express.json());
 
-const notes = [];
+//create notes
+app.post("/create-note", async (req, res) => {
+    const data = req.body;
 
-// create operation - post method
-app.post("/notes", (req, res) => {
-    notes.push(req.body);
+    await noteModel.create({
+        title : data.title,
+        description : data.description
+    })
 
     res.status(201).json({
-        message : "note created successfully"
+        message: "notes posted successfully"
     })
 })
 
-//read operation - get method
-app.get("/notes", (req, res) => {
+//view-notes
+app.get("/view-notes", async (req, res) => {
+    const notes = await noteModel.find();
+
     res.status(200).json({
-        message : "notes fetched successfully",
-        notes : notes
+        message : "notes sent successfully",
+        notes
     })
 })
 
-//update operation - patch method
-app.patch("/notes/:index", (req, res) => {
-    const index = req.params.index;
 
+//update notes
+app.patch("/update-notes/:id", async (req, res) => {
+
+    const id = req.params.id;
     const title = req.body.title;
-    notes[index].title = title;
-
     const description = req.body.description;
-    notes[index].description = description;
+
+    await noteModel.findOneAndUpdate({_id : id}, {title : title, description: description});
 
     res.status(200).json({
-        message : "notes updated successfully"
+        message : "notes updated successfully",
     })
 })
 
-//delete operation - delete method
-app.delete("/notes/:index", (req, res) => {
-    const index = req.params.index;
+//delete notes
+app.delete("/delete-notes/:id", async (req, res) => {
 
-    delete notes[index];
+    const id = req.params.id;
 
-    res.status(200).json({
-        message : "note deleted successfully"
+    await noteModel.findOneAndDelete({
+        _id: id
     })
 
+    res.status(200).json({
+        message : "notes successfully deleted"
+    })
 })
 
 
-app.listen((3000) => {
-    console.log("server is running on port no 3000")
+module.exports = app;
+
+
+
+SERVER.JS
+const app = require('./src/app.js');
+const connectDB = require('./src/db/db.js');
+connectDB();
+require('dotenv').config();
+
+
+app.listen((process.env.PORT).json() => {
+    console.log("server is running on port 3000")
 })
+
+
+DB.JS
+const mongoose = require('mongoose');
+require('dotenv').config();
+
+const connectDB = async () => {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log("connected to DB")
+}
+
+module.exports = connectDB;
+
+NOTES.MODELS.JS
+const mongoose = require('mongoose');
+
+const noteSchema = new mongoose.Schema({
+    title : String,
+    description : String
+})
+
+const noteModel = mongoose.model("notes", noteModel);
+
+modules.export = noteModel;
