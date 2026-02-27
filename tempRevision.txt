@@ -1,18 +1,55 @@
-const express = require('express');
+C R U D operations 
+
+const express = require('express')
 const app = express();
 
-app.get("/", (req, res) => {
-    res.send("home page")
+const notes = [];
+
+// create operation - post method
+app.post("/notes", (req, res) => {
+    notes.push(req.body);
+
+    res.status(201).json({
+        message : "note created successfully"
+    })
 })
 
-app.get("/profile", (req, res) => {
-    res.send("profile page")
+//read operation - get method
+app.get("/notes", (req, res) => {
+    res.status(200).json({
+        message : "notes fetched successfully",
+        notes : notes
+    })
 })
 
-app.get("/about", (req, res) => {
-    res.send("about page")
+//update operation - patch method
+app.patch("/notes/:index", (req, res) => {
+    const index = req.params.index;
+
+    const title = req.body.title;
+    notes[index].title = title;
+
+    const description = req.body.description;
+    notes[index].description = description;
+
+    res.status(200).json({
+        message : "notes updated successfully"
+    })
 })
+
+//delete operation - delete method
+app.delete("/notes/:index", (req, res) => {
+    const index = req.params.index;
+
+    delete notes[index];
+
+    res.status(200).json({
+        message : "note deleted successfully"
+    })
+
+})
+
 
 app.listen((3000) => {
-    console.log("server is running on 3000 port)
+    console.log("server is running on port no 3000")
 })

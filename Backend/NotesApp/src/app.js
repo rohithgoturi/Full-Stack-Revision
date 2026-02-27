@@ -27,10 +27,13 @@ app.get("/notes", (req, res) => {
 
 //updating a note on the server
 app.patch("/notes/:index", (req, res) => {
+
     const index = req.params.index
+    
     const description = req.body.description
-    const title = req.body.title;
     notes[index].description = description
+
+    const title = req.body.title;
     notes[index].title = title
 
     res.status(200).json({

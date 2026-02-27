@@ -1,4 +1,4 @@
-http methods server se kya action perform karwana hai voh decide karte hai
+http methods server se kya action perform karwana hai, use decide karte hai
 
 some common http methods are :
 1) get => server se data fetch karne ke liye use karte hai, joh url mein bhi dhikta hai
