@@ -1,56 +1,55 @@
-const musicModel = require('../models/music.model');
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
-const ImageKit = require('../services/storage.services');
-const { uploadMusic } = require('../services/storage.services');
-const result = await uploadFile(file.buffer('base64'));
+const musicModel = require("../models/music.models");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+// const ImageKit = require('../services/storage.services');
+const { uploadFile } = require("../services/storage.services");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const createMusic = async (req, res) => {
-    const {uri, title, artist} = req.body;
 
+    const { title } = req.body;
     const token = req.cookies.token;
-    
-    if(!token) {
-        return res.status(401).json({
-            message : "unauthorized"
-        })
+
+    if (!token) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    let decoded;
+
+    try {
+        decoded = jwt.verify(token, JWT_SECRET);
+    } catch (err) {
+        return res.status(401).json({ message: "Invalid token" });
+    }
+
+    if (decoded.role !== "artist") {
+        return res.status(403).json({
+            message: "Only artists can upload music"
+        });
     }
 
     try {
-        const decoded = jwt.verify(token,JWT_SECRET);
-        if(decoded.role !== artist){
-            return res.status(401).json({
-                message: "unauthorized"
-            })
-        }
+        const result = await uploadFile(req.file.buffer);
+
+        const music = await musicModel.create({
+            uri: result.url,
+            title,
+            artist: decoded.id
+        });
+
+        return res.status(201).json({
+            message: "Music created successfully",
+            music
+        });
+
+    } catch (err) {
+        return res.status(500).json({
+            message: err.message
+        });
     }
-    catch(err) {
-        return res.status(401).json({
-            message : "unauthorized"
-        })
-    }
 
+    console.log(decoded);
+};
 
-    const result = await uploadMusic(req.file.buffer);
-
-    const music = await musicModel.create({
-        uri: result.uri,
-        title,
-        artist : decoded.id
-    })
-
-    return res.status(201).json({
-        message : "music created successfully",
-        music : {
-            uri : music.uri,
-            title : music.title,
-            artist : music.artist
-        }
-    })
-
-
-}
-
-module.exports = {createMusic}
+module.exports = { createMusic };

@@ -1,14 +1,16 @@
-const {Imagekit} = require("imagekit");
+const Imagekit = require("imagekit");
 require('dotenv').config();
 
-const imageKit = new Imagekit({
-    privateKey : process.env.IMAGEKIT_PRIVATE_KEY
+const ImageKitClient = new Imagekit({
+    privateKey : process.env.IMAGEKIT_PRIVATE_KEY,
+    publicKey : process.env.IMAGEKIT_PUBLIC_KEY,
+    urlEndpoint : process.env.IMAGEKIT_URL_ENDPOINT
 })
 
-const uploadMusic = async (file) => {
-    const result = await imageKit.files.upload({
+const uploadFile = async (file) => {
+    const result = await ImageKitClient.upload({
         file,
-        fileName: "music.mp3",
+        fileName: "music_" + Date.now(),
         folder: "/backend-revision/music"
     })
 
@@ -16,4 +18,4 @@ const uploadMusic = async (file) => {
 }
 
 
-module.exports = {uploadMusic};
+module.exports = {uploadFile};
