@@ -1,0 +1,24 @@
+const mongoose = require("mongoose");
+const multer = require("multer");
+
+const albumSchema = new mongoose.Schema({
+    title : {
+        type: String,
+        required: true,
+        unique : true
+    },
+
+    musics : [{
+        type:mongoose.Schema.Types.ObjectId,
+        ref : "music"
+    }],
+    
+    artist : {
+        type:mongoose.Schema.Types.ObjectId,
+        ref : "user"
+    }
+})
+
+const albumModel = mongoose.model("album", albumSchema);
+
+module.exports = albumModel;
