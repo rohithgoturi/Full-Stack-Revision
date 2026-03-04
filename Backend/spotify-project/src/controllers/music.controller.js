@@ -35,6 +35,7 @@ const createMusic = async (req, res) => {
 
 const createAlbum = async (req, res) => {
 
+    
     const {title, musics} = req.body;
 
     const album = await albumModel.create({
